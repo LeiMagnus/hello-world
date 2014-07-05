@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body
+{
+font-size:28pt;
+}
+
+div.norm
+{
+display:inline-block;
+height:50px;
+width:50px;
+text-align:center;
+}
+</style>
+<script language="JavaScript">
+
+var chosen=[];
+var numberOfSuccess=0;
+var itterations=0;
+var ptg=0;
+var fllw;
+
+function pickNum(){
+index=Math.floor(Math.random()*100);
+for(i=0;i<chosen.length;i++){
+if(index==chosen[i]){
+return pickNum();
+}
+}
+return index;
+}
+
+function follow(){
+for(i=38;i<100;i++){
+var j=99;
+for(q=0;q<38;q++){
+if(chosen[q]<chosen[i]){
+break;
+}
+if(q==37){
+j=i;
+}
+}
+if(j<99){
+break;
+}
+}
+itterations+=1;
+if(chosen[j]==0){
+numberOfSuccess+=1;
+}
+ptg=Math.round((numberOfSuccess/itterations)*100000)/1000;
+return chosen[j];
+}
+
+function printArray(){
+result="";
+for(k=0;k<100;k++){
+if(chosen[k]==fllw){
+result+="<div class='norm' style='border:4px solid black;background-color:rgb("+(55+2*chosen[k])+",0,"+(255-2*chosen[k])+");'></div>";
+}else{
+result+="<div class='norm' style='border:4px solid white;background-color:rgb("+(55+2*chosen[k])+",0,"+(255-2*chosen[k])+");'></div>";
+}
+if((k+1)/10==Math.floor((k+1)/10)){
+result+="<br>";
+}
+}
+return result;
+}
+
+function run(){
+chosen=[];
+for(k=0;k<100;k++){
+chosen.push(pickNum());
+}
+fllw=follow();
+document.getElementById('container').innerHTML="Success: "+ptg+"%<br><br>"+printArray();
+}
+
+</script>
+</head>
+<body onload="setInterval('run();',150);">
+<div id="textOne">100 boxes are laid out with different colors in them. We're trying to find the 'bluest' one.<br>
+We use the first 37 boxes as a standard for the next 63. Starting with the 38th box, we stop when we get a box that is bluer than <br>
+all of the proceeding boxes - Failing that, we pick the last box.<br>
+Our success is measured as a percentage of attempts that yield the bluest box.</div><br>
+<div id="container"></div><br>
+<div id="textTwo">Expected Success: 36.7879%</div>
+</body>
+</html>
